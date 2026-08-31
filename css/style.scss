@@ -1,0 +1,1362 @@
+// =====================================================================
+// GLOBAL RIVERFRONT — Landing Page Styles
+// Brand colors: #FFFFFF (white), #864637 (brand brown)
+// Fonts: Gyst Variable (headings), Optima (subheadings & body text)
+// =====================================================================
+
+// ---------------------------------------------------------------------
+// 1. FONT FACE
+// ---------------------------------------------------------------------
+// Gyst Variable — variable font (wght 100–700), used for all headings.
+@font-face {
+  font-family: "Gyst Variable";
+  src: url("../assets/fonts/fonnts.com-Gyst_Variable_Light.otf") format("opentype-variations");
+  font-weight: 100 700;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Gyst Variable";
+  src: url("../assets/fonts/fonnts.com-Gyst_Variable_Light_Italic.otf") format("opentype-variations");
+  font-weight: 100 700;
+  font-style: italic;
+  font-display: swap;
+}
+
+// Optima — static weights, used for subheadings & body text.
+@font-face {
+  font-family: "Optima";
+  src: url("../assets/fonts/OPTIMA.TTF") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Optima";
+  src: url("../assets/fonts/Optima Medium.ttf") format("truetype");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Optima";
+  src: url("../assets/fonts/OPTIMA_B.TTF") format("truetype");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Optima";
+  src: url("../assets/fonts/Optima_Italic.ttf") format("truetype");
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+}
+
+// ---------------------------------------------------------------------
+// 2. VARIABLES
+// ---------------------------------------------------------------------
+$color-white: #ffffff;
+$color-brand: #864637;
+
+$font-heading: "Gyst Variable", Georgia, "Times New Roman", serif;
+$font-body: "Optima", Candara, "Segoe UI", Calibri, sans-serif;
+
+$container-max: 1320px;
+$container-pad: clamp(15px, 4vw, 30px);
+
+$radius-pill: 999px;
+$radius-card: 12px;
+
+$ease: cubic-bezier(0.25, 0.8, 0.25, 1);
+$transition: all 0.3s $ease;
+
+// breakpoints (max-width, mobile-first overrides applied via min-width)
+$bp-sm: 576px;
+$bp-md: 768px;
+$bp-lg: 992px;
+$bp-xl: 1200px;
+$bp-xxl: 1440px;
+
+@mixin bp($name) {
+  @if $name == sm { @media (min-width: $bp-sm) { @content; } }
+  @if $name == md { @media (min-width: $bp-md) { @content; } }
+  @if $name == lg { @media (min-width: $bp-lg) { @content; } }
+  @if $name == xl { @media (min-width: $bp-xl) { @content; } }
+  @if $name == xxl { @media (min-width: $bp-xxl) { @content; } }
+}
+
+// ---------------------------------------------------------------------
+// 3. MIXINS
+// ---------------------------------------------------------------------
+@mixin container {
+  width: 100%;
+  max-width: $container-max;
+  margin-inline: auto;
+  padding-inline: $container-pad;
+}
+
+@mixin section-pad {
+  padding-block: clamp(20px, 7vw, 40px);
+}
+
+@mixin btn-base {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 16px 34px;
+  border-radius: $radius-pill;
+  border: 1px solid transparent;
+  font-family: $font-body;
+  font-size: 0.95rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  line-height: 1;
+  text-decoration: none;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: $transition;
+  -webkit-tap-highlight-color: transparent;
+}
+
+@mixin heading-serif {
+  font-family: $font-heading;
+  color: $color-brand;
+  font-weight: 500;
+  line-height: 1.18;
+  letter-spacing: -0.01em;
+}
+
+@mixin absolute-cover {
+  position: absolute;
+  inset: 0;
+}
+
+@mixin visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+}
+
+// ---------------------------------------------------------------------
+// 4. RESET
+// ---------------------------------------------------------------------
+*, *::before, *::after { box-sizing: border-box; }
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+  overflow-x: hidden;
+}
+body {
+  margin: 0;
+  font-family: $font-body;
+  color: $color-brand;
+  background: $color-white;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+img { max-width: 100%; display: block; }
+a { color: inherit; }
+button { font-family: $font-body; }
+h1, h2, h3, h4, p, ul, table { margin: 0; padding: 0; }
+ul { list-style: none; }
+table { border-collapse: collapse; width: 100%; }
+input { font-family: $font-body; }
+
+.container { @include container; }
+
+// ---------------------------------------------------------------------
+// 5. BUTTONS
+// ---------------------------------------------------------------------
+.btn {
+  @include btn-base;
+
+  &--primary {
+    background: $color-brand;
+    color: $color-white;
+    &:hover, &:focus-visible { background: color-mix(in srgb, $color-brand 85%, black); }
+  }
+
+  &--outline {
+    background: transparent;
+    border-color: rgba($color-white, 0.7);
+    color: $color-white;
+    &:hover, &:focus-visible { background: $color-white; color: $color-brand; border-color: $color-white; }
+  }
+}
+
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 22px;
+  border-radius: $radius-pill;
+  border: 1px solid rgba($color-brand, 0.35);
+  color: $color-brand;
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: $transition;
+  svg { flex-shrink: 0; }
+  &:hover, &:focus-visible { background: $color-brand; color: $color-white; border-color: $color-brand; }
+}
+
+// =====================================================================
+// SITE HEADER
+// =====================================================================
+.site-header {
+  position: sticky;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  background: $color-brand;
+
+  &__inner {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    column-gap: 12px;
+    align-items: center;
+    min-height: 76px;
+    position: relative;
+
+    @include bp(lg) { min-height: 108px; }
+  }
+
+  &__logo {
+    grid-column: 2;
+    justify-self: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    img { height: 44px; width: auto; @include bp(lg) { height: 62px; } }
+  }
+
+  &__toggle {
+    grid-column: 1;
+    justify-self: start;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 5px;
+    width: 30px;
+    height: 30px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    z-index: 5;
+
+    span {
+      display: block;
+      width: 100%;
+      height: 2px;
+      background: $color-white;
+      transition: $transition;
+    }
+
+    @include bp(lg) { display: none; }
+  }
+}
+
+.site-nav {
+  ul { display: flex; align-items: center; gap: clamp(16px, 6vw, 80px); }
+  a {
+    color: $color-white;
+    text-decoration: none;
+    font-size: 0.95rem;
+    font-weight: 500;
+    letter-spacing: 0.01em;
+    padding-bottom: 4px;
+    border-bottom: 1px solid transparent;
+    transition: $transition;
+    &:hover, &:focus-visible { border-color: rgba($color-white, 0.7); }
+  }
+  display: none;
+  @include bp(lg) { display: block; }
+
+  &--left { grid-column: 1; justify-self: start; }
+  &--right { grid-column: 3; justify-self: end; }
+}
+
+.site-nav__mobile {
+  max-height: 0;
+  overflow: hidden;
+  background: color-mix(in srgb, $color-brand 92%, black);
+  transition: max-height 0.35s $ease;
+
+  ul { display: flex; flex-direction: column; padding: 8px $container-pad 20px; gap: 4px; }
+  a {
+    display: block;
+    color: $color-white;
+    text-decoration: none;
+    padding: 12px 0;
+    border-bottom: 1px solid rgba($color-white, 0.12);
+    font-size: 1rem;
+  }
+
+  &.is-open { max-height: 420px; }
+
+  @include bp(lg) { display: none; }
+}
+
+// persistent floating actions
+.site-visit-tab {
+  position: fixed;
+  right: 0;
+  top: 42%;
+  z-index: 60;
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+  background: $color-brand;
+  color: $color-white;
+  text-decoration: none;
+  padding: 22px 10px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  border-radius: $radius-card 0 0 $radius-card;
+  transition: $transition;
+  &:hover { padding-right: 16px; }
+}
+
+.whatsapp-fab {
+  position: fixed;
+  right: 22px;
+  bottom: 22px;
+  z-index: 60;
+  width: 52px;
+  height: 52px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: #25d366;
+  color: $color-white;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+  transition: $transition;
+  &:hover { transform: translateY(-3px); }
+}
+
+// =====================================================================
+// HERO
+// =====================================================================
+.hero {
+  position: relative;
+  min-height: 100svh;
+  display: flex;
+  overflow: hidden;
+  color: $color-white;
+
+  // &__overlay {
+  //   @include absolute-cover;
+  //   z-index: 1;
+  //   background: #00000033;
+  // }
+
+  .fullscreen-video {
+    @include absolute-cover;
+    z-index: 0;
+    width: 100%;
+    height: 90%;
+    object-fit: cover;
+    object-position: center;
+  }
+
+  &__content {
+    // no explicit height: .hero has min-height (not height), so a % height
+    // here can't resolve — leaving this auto lets align-items:stretch
+    // (default on .hero, a row-flex container) fill it instead
+    position: relative;
+    z-index: 2;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    padding-block: clamp(32px, 6vw, 64px);
+  }
+
+  // top-right supporting copy + scroll cue; &__bottom's margin-top:auto
+  // (not space-between) opens the gap so this still collapses cleanly
+  // when &__top is display:none below md
+  &__top {
+    margin-left: auto;
+    display: none;
+    flex-direction: column;
+    align-items: self-end;
+    gap: 22px;
+    @include bp(md) { display: flex; }
+  }
+
+  &__bottom {
+    margin-top: 22rem;
+  }
+
+  &__subline {
+    max-width: 360px;
+    text-align: center;
+    font-size: 1rem;
+    line-height: 1.6;
+    margin: 0;
+  }
+
+  &__scroll {
+    color: $color-white;
+    animation: bob 2.2s ease-in-out infinite;
+    display: inline-flex;
+  }
+
+  &__eyebrow {
+    text-transform: uppercase;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    margin-bottom: 12px;
+  }
+
+  &__title {
+    @include heading-serif;
+    color: $color-white;
+    font-weight: 500;
+    font-size: clamp(2.5rem, 6vw, 4.5rem);
+    line-height: 1.08;
+  }
+}
+
+@keyframes bob {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(10px); }
+}
+
+// =====================================================================
+// OVERVIEW / LIFESTYLE
+// =====================================================================
+.lifestyle {
+  @include section-pad;
+
+  &__grid {
+    display: flex;
+    gap: 40px;
+    align-items: center;
+  }
+
+  &__text {
+    width: 40%;
+    h2 { @include heading-serif; font-size: clamp(1.6rem, 2.6vw, 2.4rem); margin-bottom: 20px; }
+    p { font-size: 1rem; line-height: 1.7; color: color-mix(in srgb, $color-brand 88%, black 4%); margin-bottom: 14px; }
+    .btn { margin-top: 18px; }
+  }
+
+  &__media { width: 60%; }
+}
+
+.lifestyle-slider {
+  border-radius: $radius-card;
+  overflow: hidden;
+
+  &__item img {
+    width: 100%;
+    aspect-ratio: 5 / 3;
+    object-fit: cover;
+    border-radius: 1rem;
+  }
+
+  .owl-dots {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 18px;
+  }
+  .owl-dot span {
+    width: 34px;
+    height: 4px;
+    border-radius: 4px;
+    background: rgba($color-brand, 0.25);
+    display: block;
+    transition: $transition;
+  }
+  .owl-dot.active span { background: $color-brand; }
+}
+
+// =====================================================================
+// QUOTE BANNER
+// =====================================================================
+.quote-banner {
+  position: relative;
+  padding-block: clamp(56px, 9vw, 120px) clamp(90px, 18vw, 450px);
+  overflow: hidden;
+
+  &__text {
+    text-align: center;
+    font-style: italic;
+    @include heading-serif;
+    font-weight: 400;
+    font-size: clamp(1.35rem, 4vw, 4rem);
+    line-height: 1.5;
+  }
+
+  &__waves {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100%;
+    // height: clamp(120px, 16vw, 220px);
+    pointer-events: none;
+  }
+}
+
+// =====================================================================
+// AMENITY MAP (shared: ground floor + rooftop)
+// =====================================================================
+.amenity-map {
+  &__frame {
+    position: relative;
+    width: 100%;
+    line-height: 0;
+
+    &--dark { background: #000; }
+  }
+
+  &__img { width: 100%; height: auto; display: block; }
+
+  &__caption {
+    position: absolute;
+    top: clamp(20px, 4vw, 56px);
+    left: $container-pad;
+    max-width: 460px;
+    z-index: 5;
+    // hotspot dots (z-index 4) can sit under this text at some viewport
+    // widths; keep the caption clickable-through so it never eats a dot's click
+    pointer-events: none;
+
+    h2 {
+      @include heading-serif;
+      color: $color-white;
+      font-size: clamp(1.3rem, 2.6vw, 2rem);
+      text-shadow: 0 2px 14px rgba(0, 0, 0, 0.4);
+    }
+  }
+
+  &__legend {
+    position: absolute;
+    left: $container-pad;
+    bottom: clamp(20px, 5vw, 60px);
+    max-width: 420px;
+    color: $color-white;
+    z-index: 5;
+    pointer-events: none;
+    display: none;
+    @include bp(md) { display: block; }
+
+    p { font-size: 0.92rem; line-height: 1.6; text-shadow: 0 2px 10px rgba(0, 0, 0, 0.45); }
+  }
+
+  &__hint {
+    font-weight: 700;
+    margin-bottom: 10px;
+    position: absolute;
+    left: $container-pad;
+    bottom: clamp(20px, 5vw, 60px);
+    color: $color-white;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.45);
+    z-index: 5;
+    pointer-events: none;
+
+    &--light { position: relative; margin: 0 0 0 $container-pad; padding-top: 18px; }
+  }
+
+  &--ground .amenity-map__legend { bottom: clamp(20px, 5vw, 60px); }
+  &--ground .amenity-map__hint { display: none; @include bp(md) { display: none; } }
+
+  &--rooftop {
+    .amenity-map__caption { max-width: 520px; }
+  }
+
+  &__hotspots { @include absolute-cover; z-index: 4; }
+}
+
+.hotspot {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  border: 1.5px solid $color-white;
+  background: rgba($color-brand, 0.55);
+  color: $color-white;
+  font-size: 0.85rem;
+  font-weight: 700;
+  font-family: $font-body;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: $transition;
+  backdrop-filter: blur(1px);
+
+  &:hover, &:focus-visible, &.is-active {
+    background: $color-brand;
+    transform: translate(-50%, -50%) scale(1.15);
+  }
+
+  &--letter {
+    width: 34px;
+    height: 34px;
+    background: $color-brand;
+    border-color: $color-white;
+  }
+}
+
+// =====================================================================
+// PAVILION INTRO
+// =====================================================================
+.pavilion-intro {
+  padding: 8rem 0rem;
+
+  &__grid {
+    display: grid;
+    gap: 32px;
+    align-items: center;
+    grid-template-columns: 1fr;
+    @include bp(lg) { grid-template-columns: 0.5fr 1fr; gap: 60px; }
+  }
+
+  &__badge {
+    span {
+      display: block;
+      border: 1px solid #c8a24a;
+      color: $color-brand;
+      text-align: center;
+      text-transform: uppercase;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      font-size: 1.5rem;
+      line-height: 1.35;
+      padding: 22px 30px;
+      max-width: 320px;
+    }
+  }
+
+  &__text p {
+    font-size: 1.02rem;
+    line-height: 1.75;
+    margin-bottom: 16px;
+    color: color-mix(in srgb, $color-brand 88%, black 4%);
+  }
+}
+
+// =====================================================================
+// UNIT CONFIGURATION
+// =====================================================================
+.unit-config {
+  @include section-pad;
+
+  h2 { @include heading-serif; font-size: clamp(1.6rem, 2.8vw, 2.3rem); margin-bottom: 28px; }
+
+  &__tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 36px;
+  }
+
+  &__tab {
+    @include btn-base;
+    padding: 13px 26px;
+    background: transparent;
+    border-color: rgba($color-brand, 0.4);
+    color: $color-brand;
+
+    &.is-active, &:hover { background: $color-brand; color: $color-white; border-color: $color-brand; }
+  }
+
+  &__panel {
+    display: grid;
+    gap: 32px;
+    grid-template-columns: 1fr;
+    align-items: start;
+    @include bp(lg) { grid-template-columns: 1.3fr 0.9fr; }
+  }
+
+  &__plan {
+    position: relative;
+    background: rgba($color-brand, 0.05);
+    border-radius: $radius-card;
+    padding: clamp(16px, 3vw, 40px);
+    // clips the blurred image's scaled-up edges (below) so blur sampling
+    // never shows a soft/transparent fringe at the image boundary
+    overflow: hidden;
+    max-height: 570px;
+
+    // direct-child selector: keeps this off the zoom icon's own <img>,
+    // which lives one level deeper inside &__zoom
+    > img {
+      display: block;
+      width: 100%;
+      height: auto;
+      margin-inline: auto;
+      filter: blur(12px);
+      transform: scale(1.06);
+    }
+  }
+
+  &__zoom {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: clamp(48px, 6vw, 64px);
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    transition: $transition;
+
+    img { width: 100%; height: auto; display: block; }
+
+    &:hover { transform: translate(-50%, -50%) scale(1.08); }
+  }
+
+  &__details { display: flex; flex-direction: column; gap: 22px; }
+
+  &__card {
+    border: 1px solid rgba($color-brand, 0.25);
+    border-radius: $radius-card;
+    padding: clamp(20px, 2.6vw, 30px);
+
+    &-label { text-transform: uppercase; font-size: 0.78rem; font-weight: 700; letter-spacing: 0.08em; margin-bottom: 4px; opacity: 0.75; }
+    h3 { @include heading-serif; font-size: 1.4rem; margin-bottom: 16px; }
+
+    table { font-size: 0.92rem; }
+    th { text-align: left; padding-bottom: 8px; font-weight: 700; }
+    td { padding: 8px 0; border-top: 1px solid rgba($color-brand, 0.12); }
+    td:last-child, th:last-child { text-align: right; }
+  }
+
+  &__price { align-self: flex-start; }
+}
+
+// =====================================================================
+// GALLERY
+// =====================================================================
+.gallery {
+  @include section-pad;
+  padding-bottom: clamp(40px, 6vw, 70px);
+
+  h2 { @include heading-serif; font-size: clamp(1.6rem, 2.8vw, 2.2rem); margin-bottom: 28px; }
+
+  &__stage { position: relative; }
+
+  &__carousel:not(.is-active) { display: none; }
+
+  &__item img {
+    width: 100%;
+    aspect-ratio: 16 / 8;
+    object-fit: cover;
+  }
+
+  .owl-nav {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    pointer-events: none;
+    padding-inline: 16px;
+
+    button {
+      pointer-events: auto;
+      width: 46px;
+      height: 46px;
+      border-radius: 50%;
+      background: rgba($color-white, 0.85);
+      color: $color-brand;
+      font-size: 1.4rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: $transition;
+      &:hover { background: $color-brand; color: $color-white; }
+    }
+  }
+
+  &__tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 24px;
+  }
+
+  &__tab {
+    @include btn-base;
+    padding: 12px 24px;
+    background: transparent;
+    border-color: rgba($color-brand, 0.35);
+    color: $color-brand;
+    &.is-active, &:hover { background: $color-brand; color: $color-white; border-color: $color-brand; }
+  }
+}
+
+// =====================================================================
+// LOCATION
+// =====================================================================
+.location {
+  @include section-pad;
+
+  h2 { @include heading-serif; font-size: clamp(1.6rem, 2.8vw, 2.2rem); margin-bottom: 24px; }
+
+  &__map {
+    position: relative;
+    border: 1px solid rgba($color-brand, 0.25);
+    border-radius: $radius-card;
+    overflow: hidden;
+    line-height: 0;
+  }
+
+  &__badge {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    background: $color-brand;
+    color: $color-white;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.9rem;
+    padding: 16px 24px;
+    border-radius: 0 $radius-card 0 0;
+    transition: $transition;
+    &:hover { padding-inline: 30px 24px; }
+  }
+
+  &__pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 28px;
+
+    .pill.is-active { background: $color-brand; color: $color-white; border-color: $color-brand; }
+  }
+
+  // Height-animated on open/close: this element stays a bare, unpadded
+  // max-height/overflow:hidden clip; all real spacing lives on &__category-inner
+  // so a 0-height closed state never leaves a visible gap.
+  &__category-panel {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.4s $ease;
+  }
+
+  &__category-inner {
+    margin-top: 20px;
+    background: rgba($color-brand, 0.06);
+    border-radius: $radius-card;
+    padding: clamp(20px, 3vw, 32px);
+  }
+
+  &__category-list li {
+    color: $color-brand;
+    font-size: 0.95rem;
+    line-height: 1.9;
+  }
+
+  &__category-foot {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin-top: 16px;
+    padding-top: 16px;
+    border-top: 1px solid rgba($color-brand, 0.2);
+
+    h4 { @include heading-serif; font-size: 1.15rem; font-weight: 600; }
+  }
+
+  &__category-close {
+    flex-shrink: 0;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    border: none;
+    background: $color-brand;
+    color: $color-white;
+    font-size: 1rem;
+    line-height: 1;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: $transition;
+    &:hover { background: color-mix(in srgb, $color-brand 85%, black); }
+  }
+}
+
+// =====================================================================
+// WALKTHROUGH
+// =====================================================================
+.walkthrough {
+  @include section-pad;
+
+  &__head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    margin-bottom: 28px;
+
+    h2 { @include heading-serif; font-size: clamp(1.5rem, 2.6vw, 2.1rem); max-width: 620px; }
+  }
+
+  &__toggle svg { margin-left: 2px; }
+
+  &__frame {
+    position: relative;
+    background: rgba($color-brand, 0.06);
+    border-radius: $radius-card;
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+  }
+
+  &__play {
+    @include absolute-cover;
+    width: 100%;
+    height: 100%;
+    background: transparent;
+    border: none;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 18px;
+    cursor: pointer;
+    color: $color-brand;
+
+    span:last-child {
+      background: $color-white;
+      padding: 14px 26px;
+      border-radius: $radius-pill;
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+    }
+  }
+
+  &__play-icon {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    background: $color-brand;
+    color: $color-white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  &__frame.is-playing &__play { display: none; }
+
+  video {
+    @include absolute-cover;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: none;
+  }
+  &__frame.is-playing video { display: block; }
+}
+
+// =====================================================================
+// ABOUT US
+// =====================================================================
+.about {
+  position: relative;
+  background: $color-brand;
+  color: $color-white;
+  @include section-pad;
+  overflow: hidden;
+
+  &__bird {
+    position: absolute;
+    width: clamp(70px, 9vw, 130px);
+    height: auto;
+    opacity: 0.18;
+    &--1 { top: 12%; left: 42%; }
+    &--2 { top: 20%; left: 48%; }
+  }
+
+  &__grid {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    gap: 40px;
+    grid-template-columns: 1fr;
+    align-items: center;
+    @include bp(lg) { grid-template-columns: 1.1fr 0.9fr; gap: 64px; }
+  }
+
+  &__logo {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 28px;
+  }
+  &__logo-title { font-size: 0.95rem; font-weight: 700; letter-spacing: 0.1em; line-height: 1.3; text-transform: uppercase; }
+  &__logo-tag { font-size: 0.68rem; letter-spacing: 0.14em; opacity: 0.8; margin-top: 4px; }
+
+  &__text {
+    h2 { @include heading-serif; color: $color-white; font-size: clamp(1.5rem, 2.6vw, 2.1rem); margin-bottom: 20px; }
+    p { font-size: 0.98rem; line-height: 1.75; opacity: 0.92; margin-bottom: 14px; max-width: 560px; }
+  }
+
+  &__media img { width: 100%; border-radius: $radius-card; border: 1px solid rgba($color-white, 0.25); }
+}
+
+// =====================================================================
+// LANDMARKS
+// =====================================================================
+.landmarks {
+  @include section-pad;
+
+  h2 { @include heading-serif; font-size: clamp(1.6rem, 2.8vw, 2.2rem); margin-bottom: 24px; }
+
+  &__tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 8px;
+  }
+
+  &__tab {
+    @include btn-base;
+    padding: 12px 26px;
+    background: transparent;
+    border-color: rgba($color-brand, 0.35);
+    color: $color-brand;
+    &.is-active, &:hover { background: $color-brand; color: $color-white; border-color: $color-brand; }
+  }
+
+  &__stage { margin-top: 24px; }
+
+  &__carousel:not(.is-active) { display: none; }
+}
+
+.landmark-card {
+  img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; border-radius: $radius-card; margin-bottom: 14px; }
+  h3 { @include heading-serif; font-size: 1.1rem; margin-bottom: 4px; }
+  p { font-size: 0.88rem; color: color-mix(in srgb, $color-brand 75%, black 5%); }
+}
+
+// =====================================================================
+// CONTACT / RERA (footer)
+// =====================================================================
+.contact {
+  @include section-pad;
+
+  &__grid {
+    display: grid;
+    gap: 40px;
+    grid-template-columns: 1fr;
+    align-items: start;
+    @include bp(lg) { grid-template-columns: 0.75fr 1.25fr; gap: 60px; }
+  }
+
+  &__rera {
+    h2 { @include heading-serif; font-size: 1.6rem; margin-bottom: 14px; }
+    p { font-size: 0.95rem; line-height: 1.6; margin-bottom: 18px; }
+    a { color: $color-brand; text-decoration: underline; }
+  }
+
+  &__qr { width: 118px; height: 118px; margin-bottom: 18px; }
+  &__rera-phase { font-weight: 700; margin-bottom: 6px !important; }
+  &__rera-no { font-weight: 700; line-height: 1.5; }
+
+  &__form-wrap {
+    background: rgba($color-brand, 0.05);
+    border-radius: 20px;
+    padding: clamp(24px, 3.6vw, 48px);
+  }
+
+  &__form h2 { @include heading-serif; font-size: 1.6rem; margin-bottom: 28px; }
+
+  &__row {
+    display: grid;
+    gap: 20px;
+    grid-template-columns: 1fr;
+    @include bp(md) { grid-template-columns: repeat(3, 1fr); }
+  }
+
+  .field {
+    margin-bottom: 24px;
+    &--full { grid-column: 1 / -1; }
+
+    label { display: block; font-weight: 700; font-size: 0.95rem; margin-bottom: 10px; }
+    input {
+      width: 100%;
+      border: none;
+      border-bottom: 1px solid rgba($color-brand, 0.4);
+      background: transparent;
+      padding: 6px 2px 10px;
+      font-size: 0.95rem;
+      color: $color-brand;
+      outline: none;
+      transition: $transition;
+      &:focus { border-color: $color-brand; }
+    }
+  }
+
+  &__consent {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    font-size: 0.85rem;
+    line-height: 1.55;
+    margin-bottom: 28px;
+    cursor: pointer;
+
+    input { margin-top: 3px; accent-color: $color-brand; flex-shrink: 0; }
+  }
+
+  &__form-note {
+    margin-top: 14px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    min-height: 1.2em;
+  }
+}
+
+// =====================================================================
+// SITE FOOTER
+// =====================================================================
+.site-footer {
+  background: $color-brand;
+  color: $color-white;
+
+  &__grid {
+    display: grid;
+    gap: 36px;
+    grid-template-columns: 1fr;
+    padding-block: clamp(40px, 6vw, 72px);
+    @include bp(lg) { grid-template-columns: 1.25fr auto 0.85fr 0.85fr 0.85fr; gap: 44px; }
+  }
+
+  &__brand { display: flex; flex-direction: column; gap: 26px; }
+
+  &__logo {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  &__logo-mark { width: 130px; height: auto; margin-bottom: 10px; }
+
+  &__logo-name {
+    color: #4fb3c9;
+    font-weight: 700;
+    font-size: 1.3rem;
+    letter-spacing: 0.14em;
+    line-height: 1.15;
+    text-transform: uppercase;
+  }
+
+  &__logo-tag {
+    font-size: 0.7rem;
+    letter-spacing: 0.12em;
+    opacity: 0.85;
+    margin-top: 6px !important;
+    text-transform: uppercase;
+  }
+
+  &__block {
+    h4 { font-size: 0.98rem; font-weight: 700; margin-bottom: 10px; }
+    p { font-size: 0.92rem; line-height: 1.65; opacity: 0.92; }
+  }
+
+  &__divider {
+    display: none;
+    @include bp(lg) {
+      display: block;
+      width: 1px;
+      background: rgba($color-white, 0.25);
+    }
+  }
+
+  &__col {
+    h4 {
+      font-size: 0.98rem;
+      font-weight: 700;
+      margin-bottom: 10px;
+      &:not(:first-child) { margin-top: 26px; }
+    }
+    p { font-size: 0.92rem; line-height: 1.65; opacity: 0.92; }
+    a { text-decoration: none; transition: $transition; &:hover { opacity: 0.7; } }
+  }
+
+  &__links {
+    li + li { margin-top: 10px; }
+    a { font-size: 0.92rem; }
+  }
+
+  &__socials {
+    display: flex;
+    gap: 12px;
+  }
+
+  &__nav-heading {
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  &__nav {
+    li + li { margin-top: 14px; }
+    a {
+      font-size: 0.85rem;
+      font-weight: 600;
+      letter-spacing: 0.03em;
+      text-transform: uppercase;
+      color: rgba($color-white, 0.65);
+      &:hover { color: $color-white; opacity: 1; }
+    }
+  }
+
+  &__bottom {
+    background: color-mix(in srgb, $color-brand 65%, black);
+    padding-block: 20px;
+    text-align: center;
+
+    p { font-size: 0.85rem; font-weight: 600; opacity: 0.9; }
+    span { margin-inline: 10px; opacity: 0.6; }
+    a { text-decoration: none; &:hover { opacity: 0.75; } }
+  }
+}
+
+.social-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  border: 1px solid rgba($color-white, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: $transition;
+
+  &:hover { background: rgba($color-white, 0.12); opacity: 1 !important; }
+}
+
+// =====================================================================
+// SHARED OVERLAYS: hotspot popover + lightbox
+// =====================================================================
+.hotspot-popover {
+  position: fixed;
+  z-index: 200;
+  width: 240px;
+  background: $color-white;
+  border-radius: $radius-card;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.25);
+  overflow: hidden;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(8px);
+  // only animate show/hide, not layout props — .is-card changes `width`,
+  // and positionPopover() measures outerWidth() synchronously right after
+  // toggling that class, so a `transition:all` here would still be mid-flight
+  // (reporting the pre-toggle width) at measurement time and mis-place the card
+  transition: opacity 0.3s $ease, visibility 0.3s $ease, transform 0.3s $ease;
+
+  &.is-visible { opacity: 1; visibility: visible; transform: translateY(0); }
+
+  img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; }
+  p { padding: 12px 14px; font-weight: 600; font-size: 0.92rem; color: $color-brand; }
+
+  // Figma-exported hotspot cards already bake in their own rounded white
+  // border + title, so this variant strips this element's own chrome and
+  // just lets that artwork float (with a soft lifted shadow) over the frame.
+  &.is-card {
+    width: clamp(220px, 34vw, 440px);
+    background: transparent;
+    border-radius: 0;
+    box-shadow: none;
+    filter: drop-shadow(0 16px 32px rgba(0, 0, 0, 0.35));
+
+    img { aspect-ratio: 497 / 334; object-fit: contain; }
+    p { display: none; }
+    .hotspot-popover__close { display: none; }
+  }
+
+  &__close {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    border: none;
+    background: rgba(0, 0, 0, 0.45);
+    color: $color-white;
+    font-size: 1rem;
+    line-height: 1;
+    cursor: pointer;
+    z-index: 2;
+  }
+}
+
+.lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 300;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 30px;
+  background: rgba(0, 0, 0, 0.85);
+  opacity: 0;
+  visibility: hidden;
+  transition: $transition;
+
+  &.is-visible { opacity: 1; visibility: visible; }
+
+  img { max-width: 100%; max-height: 90vh; border-radius: 8px; }
+
+  &__close {
+    position: absolute;
+    top: 24px;
+    right: 24px;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    border: none;
+    background: rgba($color-white, 0.15);
+    color: $color-white;
+    font-size: 1.4rem;
+    cursor: pointer;
+  }
+}
+
+// =====================================================================
+// GRID BLOWOUT GUARD
+// =====================================================================
+// Grid/flex items default to min-width:auto, so a cell holding an Owl
+// Carousel (whose un-wrapped slide track reports a huge min-content
+// width) or a large source image (natural width, not the CSS width:100%)
+// refuses to shrink and inflates the whole track. Reset explicitly.
+.lifestyle__grid > *,
+.pavilion-intro__grid > *,
+.about__grid > *,
+.contact__grid > *,
+.site-footer__grid > *,
+.unit-config__plan,
+.unit-config__details {
+  min-width: 0;
+}
+
+// =====================================================================
+// RESPONSIVE TWEAKS
+// =====================================================================
+@media (max-width: #{$bp-md - 1px}) {
+  .amenity-map__caption { max-width: 88%; }
+  .hero__title { font-size: clamp(2rem, 9vw, 2.8rem); }
+  .contact__row { gap: 8px; }
+}
