@@ -62,7 +62,7 @@ $color-brand: #864637;
 $font-heading: "Gyst Variable", Georgia, "Times New Roman", serif;
 $font-body: "Optima", Candara, "Segoe UI", Calibri, sans-serif;
 
-$container-max: 1320px;
+$container-max: 1490px;
 $container-pad: clamp(15px, 4vw, 30px);
 
 $radius-pill: 999px;
@@ -177,6 +177,7 @@ input { font-family: $font-body; }
   &--primary {
     background: $color-brand;
     color: $color-white;
+    padding: 10px 16px;
     &:hover, &:focus-visible { background: color-mix(in srgb, $color-brand 85%, black); }
   }
 
@@ -232,7 +233,7 @@ input { font-family: $font-body; }
     display: flex;
     align-items: center;
     justify-content: center;
-    img { height: 44px; width: auto; @include bp(lg) { height: 62px; } }
+    img { height: 60px; width: auto; @include bp(lg) { height: 85px; } }
   }
 
   &__toggle {
@@ -267,8 +268,8 @@ input { font-family: $font-body; }
   a {
     color: $color-white;
     text-decoration: none;
-    font-size: 0.95rem;
-    font-weight: 500;
+    font-size: 1rem;
+    font-weight: 600;
     letter-spacing: 0.01em;
     padding-bottom: 4px;
     border-bottom: 1px solid transparent;
@@ -279,7 +280,7 @@ input { font-family: $font-body; }
   @include bp(lg) { display: block; }
 
   &--left { grid-column: 1; justify-self: start; }
-  &--right { grid-column: 3; justify-self: end; }
+  &--right { grid-column: 3; justify-self: end;margin-right: 6rem; }
 }
 
 .site-nav__mobile {
@@ -437,19 +438,18 @@ input { font-family: $font-body; }
   @include section-pad;
 
   &__grid {
-    display: flex;
-    gap: 40px;
+    display: grid;
+    gap: 32px;
     align-items: center;
+    grid-template-columns: 1fr;
+    @include bp(lg) { grid-template-columns: 2fr 3fr; gap: 40px; }
   }
 
   &__text {
-    width: 40%;
     h2 { @include heading-serif; font-size: clamp(1.6rem, 2.6vw, 2.4rem); margin-bottom: 20px; }
     p { font-size: 1rem; line-height: 1.7; color: color-mix(in srgb, $color-brand 88%, black 4%); margin-bottom: 14px; }
     .btn { margin-top: 18px; }
   }
-
-  &__media { width: 60%; }
 }
 
 .lifestyle-slider {
@@ -466,18 +466,25 @@ input { font-family: $font-body; }
   .owl-dots {
     display: flex;
     justify-content: center;
+    align-items: center;
     gap: 8px;
     margin-top: 18px;
+
+    // nested one level deeper than the bare .owl-dot selectors used to be:
+    // matches the specificity of the bundled owl.theme.default.css rules
+    // (.owl-theme .owl-dots .owl-dot(.active) span), which otherwise win
+    // the cascade over a shallower selector and silently keep Owl's stock
+    // gray/teal dot colors instead of the brand color set here.
+    .owl-dot span {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: rgba($color-brand, 0.25);
+      display: block;
+      transition: $transition;
+    }
+    .owl-dot.active span { width: 22px; border-radius: 4px; background: $color-brand; }
   }
-  .owl-dot span {
-    width: 34px;
-    height: 4px;
-    border-radius: 4px;
-    background: rgba($color-brand, 0.25);
-    display: block;
-    transition: $transition;
-  }
-  .owl-dot.active span { background: $color-brand; }
 }
 
 // =====================================================================
@@ -581,24 +588,23 @@ input { font-family: $font-body; }
 .hotspot {
   position: absolute;
   transform: translate(-50%, -50%);
-  width: 30px;
-  height: 30px;
+  width: 28px;
+  height: 28px;
   border-radius: 50%;
-  border: 1.5px solid $color-white;
-  background: rgba($color-brand, 0.55);
-  color: $color-white;
-  font-size: 0.85rem;
-  font-weight: 700;
+  border: none;
+  background: $color-white;
+  color: $color-brand;
   font-family: $font-body;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.35);
   transition: $transition;
-  backdrop-filter: blur(1px);
 
   &:hover, &:focus-visible, &.is-active {
     background: $color-brand;
+    color: $color-white;
     transform: translate(-50%, -50%) scale(1.15);
   }
 
@@ -606,7 +612,13 @@ input { font-family: $font-body; }
     width: 34px;
     height: 34px;
     background: $color-brand;
-    border-color: $color-white;
+    color: $color-white;
+    font-size: 0.85rem;
+    font-weight: 700;
+    border: 1.5px solid $color-white;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.35);
+
+    &:hover, &:focus-visible, &.is-active { background: color-mix(in srgb, $color-brand 85%, black); }
   }
 }
 
@@ -743,6 +755,7 @@ input { font-family: $font-body; }
 // GALLERY
 // =====================================================================
 .gallery {
+  position: relative;
   @include section-pad;
   padding-bottom: clamp(40px, 6vw, 70px);
 
@@ -782,6 +795,13 @@ input { font-family: $font-body; }
       &:hover { background: $color-brand; color: $color-white; }
     }
   }
+  &__tabs-wrapper{
+    position: absolute;
+    bottom: 5rem;
+    z-index: 1;
+    left: 50%;
+    transform: translate(-24%, -50%);
+  }
 
   &__tabs {
     display: flex;
@@ -793,7 +813,7 @@ input { font-family: $font-body; }
   &__tab {
     @include btn-base;
     padding: 12px 24px;
-    background: transparent;
+    background: white;
     border-color: rgba($color-brand, 0.35);
     color: $color-brand;
     &.is-active, &:hover { background: $color-brand; color: $color-white; border-color: $color-brand; }
@@ -805,7 +825,7 @@ input { font-family: $font-body; }
 // =====================================================================
 .location {
   @include section-pad;
-
+position:relative;
   h2 { @include heading-serif; font-size: clamp(1.6rem, 2.8vw, 2.2rem); margin-bottom: 24px; }
 
   &__map {
@@ -831,65 +851,124 @@ input { font-family: $font-body; }
     &:hover { padding-inline: 30px 24px; }
   }
 
-  &__pills {
+  // Each category is its own self-contained card: content sits above the
+  // tab and grows upward out of it, so the tab's position never jumps when
+  // opened. align-items:flex-end keeps every tab pinned to the same
+  // baseline regardless of which card (if any) is expanded above it.
+  &__cards {
     display: flex;
     flex-wrap: wrap;
-    gap: 12px;
-    margin-top: 28px;
-
-    .pill.is-active { background: $color-brand; color: $color-white; border-color: $color-brand; }
+    justify-content: center;
+    align-items: flex-end;
+    gap: 1rem;
+    // In-flow (not absolutely positioned against the full-bleed section)
+    // so it stays bounded to the container width and wraps to as many
+    // rows as it needs on narrow screens instead of overflowing past the
+    // right edge or collapsing the section's height. The small negative
+    // margin keeps the original design's slight overlap onto the map.
+        position: absolute;
+    bottom: -7rem;
   }
 
-  // Height-animated on open/close: this element stays a bare, unpadded
-  // max-height/overflow:hidden clip; all real spacing lives on &__category-inner
-  // so a 0-height closed state never leaves a visible gap.
-  &__category-panel {
+  &__card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    border-radius: 22px;
+    border: 1px solid transparent;
+    background: transparent;
+    transition: background 0.35s $ease, border-color 0.35s $ease;
+
+    &.is-active {
+      background-color: #F5F0EC;
+      border-color: rgba($color-brand, 0.3);
+    }
+  }
+
+  // Bare max-height/overflow:hidden clip; opacity+transform ride along on
+  // the same element so the reveal reads as "grow + fade up", and the real
+  // padding lives permanently on the <ul> (harmless while clipped to 0) so
+  // it doesn't have to be juggled as a separate animated property.
+  &__card-content {
     max-height: 0;
     overflow: hidden;
-    transition: max-height 0.4s $ease;
+    opacity: 0;
+    transform: translateY(12px);
+    transition: max-height 0.4s $ease, opacity 0.3s $ease, transform 0.4s $ease;
+    background-color: #F5F0EC;
+
+    ul { padding: 18px 22px 6px; }
+
+    li {
+      color: $color-brand;
+      font-size: 0.95rem;
+      line-height: 1.85;
+      white-space: nowrap;
+    }
   }
 
-  &__category-inner {
-    margin-top: 20px;
-    background: rgba($color-brand, 0.06);
-    border-radius: $radius-card;
-    padding: clamp(20px, 3vw, 32px);
+  &__card.is-active &__card-content {
+    opacity: 1;
+    transform: translateY(0);
+    background-color: #F5F0EC;
   }
 
-  &__category-list li {
-    color: $color-brand;
-    font-size: 0.95rem;
-    line-height: 1.9;
-  }
-
-  &__category-foot {
+  &__card-tab {
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    gap: 16px;
-    margin-top: 16px;
-    padding-top: 16px;
-    border-top: 1px solid rgba($color-brand, 0.2);
+    justify-content: center;
+    gap: 10px;
+    border: 1px solid rgba($color-brand, 0.35);
+    border-radius: $radius-pill;
+    background: $color-white;
+    color: $color-brand;
+    font-family: $font-body;
+    font-size: 0.9rem;
+    font-weight: 600;
+    white-space: nowrap;
+    padding: 12px 12px 12px 22px;
+    cursor: pointer;
+    transition: $transition;
 
-    h4 { @include heading-serif; font-size: 1.15rem; font-weight: 600; }
+    &:hover, &:focus-visible { background: $color-brand; color: $color-white; border-color: $color-brand; }
   }
 
-  &__category-close {
+  &__card-icon {
     flex-shrink: 0;
-    width: 30px;
-    height: 30px;
+    width: 26px;
+    height: 26px;
     border-radius: 50%;
-    border: none;
-    background: $color-brand;
-    color: $color-white;
-    font-size: 1rem;
-    line-height: 1;
-    cursor: pointer;
+    border: 1px solid currentColor;
     display: flex;
     align-items: center;
     justify-content: center;
     transition: $transition;
-    &:hover { background: color-mix(in srgb, $color-brand 85%, black); }
+
+    .icon-close { display: none; }
+  }
+
+  &__card.is-active {
+    .location__card-tab {
+      border: none;
+      background: none;
+      color: $color-brand;
+      border-top: 1px solid rgba($color-brand, 0.2);
+      border-radius: 0 0 22px 22px;
+      padding: 16px 20px;
+
+      &:hover, &:focus-visible { background: rgba($color-brand, 0.08); color: $color-brand; }
+    }
+
+    .location__card-title { @include heading-serif; font-size: 1.05rem; font-weight: 600; }
+
+    .location__card-icon {
+      background: $color-brand;
+      border-color: $color-brand;
+      color: $color-white;
+
+      .icon-open { display: none; }
+      .icon-close { display: block; }
+    }
   }
 }
 
@@ -898,6 +977,7 @@ input { font-family: $font-body; }
 // =====================================================================
 .walkthrough {
   @include section-pad;
+  padding-top:10rem;
 
   &__head {
     display: flex;
@@ -974,18 +1054,17 @@ input { font-family: $font-body; }
 // =====================================================================
 .about {
   position: relative;
-  background: $color-brand;
   color: $color-white;
-  @include section-pad;
+  // @include section-pad;
   overflow: hidden;
+  padding-block: clamp(20px, 6vw, 180px);
 
-  &__bird {
+  &__brown-bg {
     position: absolute;
-    width: clamp(70px, 9vw, 130px);
+    top:0;
+    width: 100%;
     height: auto;
-    opacity: 0.18;
-    &--1 { top: 12%; left: 42%; }
-    &--2 { top: 20%; left: 48%; }
+    object-fit: cover;
   }
 
   &__grid {
@@ -999,10 +1078,7 @@ input { font-family: $font-body; }
   }
 
   &__logo {
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    margin-bottom: 28px;
+    margin-bottom: 1rem;
   }
   &__logo-title { font-size: 0.95rem; font-weight: 700; letter-spacing: 0.1em; line-height: 1.3; text-transform: uppercase; }
   &__logo-tag { font-size: 0.68rem; letter-spacing: 0.14em; opacity: 0.8; margin-top: 4px; }
@@ -1011,8 +1087,8 @@ input { font-family: $font-body; }
     h2 { @include heading-serif; color: $color-white; font-size: clamp(1.5rem, 2.6vw, 2.1rem); margin-bottom: 20px; }
     p { font-size: 0.98rem; line-height: 1.75; opacity: 0.92; margin-bottom: 14px; max-width: 560px; }
   }
-
-  &__media img { width: 100%; border-radius: $radius-card; border: 1px solid rgba($color-white, 0.25); }
+&__media{border: none;}
+  &__media img { width: 100%;height: 500px; object-fit: contain;}
 }
 
 // =====================================================================
@@ -1039,17 +1115,35 @@ input { font-family: $font-body; }
     &.is-active, &:hover { background: $color-brand; color: $color-white; border-color: $color-brand; }
   }
 
-  &__stage { margin-top: 24px; }
+  // Full-bleed slider stage: left edge lines up with the container's
+  // content (same inset the centered .container uses once the viewport
+  // exceeds $container-max), but there's no right padding and no
+  // max-width — the track is free to run past the viewport's right edge,
+  // where `overflow: hidden` clips it to produce the "peek" cutoff.
+  &__stage {
+    margin-top: 24px;
+    width: 100%;
+    overflow: hidden;
+    padding-left: max(#{$container-pad}, calc((100vw - #{$container-max}) / 2 + #{$container-pad}));
+  }
 
   &__carousel:not(.is-active) { display: none; }
 }
 
 .landmark-card {
+  // Fixed width (not a container-fraction) so cards never shrink to fit —
+  // paired with owl's `autoWidth: true`, this is what lets the 4th card
+  // peek in, clipped, instead of every card resizing to show exactly N.
+  flex-shrink: 0;
+  width: clamp(260px, 30vw, 440px);
+
   // matches both the Figma reference's card proportions and the native
   // ~2.06:1 crop of the landmark asset exports (was 4/3, too tall/narrow)
   img { width: 100%; aspect-ratio: 2 / 1; object-fit: cover; border-radius: $radius-card; margin-bottom: 14px; }
   h3 { @include heading-serif; font-size: 1.1rem; margin-bottom: 4px; }
   p { font-size: 0.88rem; color: color-mix(in srgb, $color-brand 75%, black 5%); }
+
+  @media (max-width: #{$bp-md - 1px}) { width: clamp(220px, 72vw, 320px); }
 }
 
 // =====================================================================
@@ -1063,7 +1157,7 @@ input { font-family: $font-body; }
     gap: 40px;
     grid-template-columns: 1fr;
     align-items: start;
-    @include bp(lg) { grid-template-columns: 0.75fr 1.25fr; gap: 60px; }
+    @include bp(lg) { grid-template-columns: 0.75fr 1.25fr; gap: 10rem; }
   }
 
   &__rera {
@@ -1080,6 +1174,7 @@ input { font-family: $font-body; }
     background: rgba($color-brand, 0.05);
     border-radius: 20px;
     padding: clamp(24px, 3.6vw, 48px);
+    margin-right: 10rem;
   }
 
   &__form h2 { @include heading-serif; font-size: 1.6rem; margin-bottom: 28px; }
@@ -1254,52 +1349,57 @@ input { font-family: $font-body; }
 .hotspot-popover {
   position: fixed;
   z-index: 200;
-  width: 240px;
+  width: clamp(220px, 34vw, 440px);
   background: $color-white;
-  border-radius: $radius-card;
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.25);
+  border-radius: 16px;
+  padding: 10px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
   overflow: hidden;
   opacity: 0;
   visibility: hidden;
   transform: translateY(8px);
-  // only animate show/hide, not layout props — .is-card changes `width`,
-  // and positionPopover() measures outerWidth() synchronously right after
-  // toggling that class, so a `transition:all` here would still be mid-flight
-  // (reporting the pre-toggle width) at measurement time and mis-place the card
+  // only animate show/hide, not layout props — positionPopover() measures
+  // outerWidth()/outerHeight() synchronously right after toggling
+  // .is-visible, so a `transition:all` here would still be mid-flight
+  // (reporting the pre-toggle size) at measurement time and mis-place the card
   transition: opacity 0.3s $ease, visibility 0.3s $ease, transform 0.3s $ease;
 
   &.is-visible { opacity: 1; visibility: visible; transform: translateY(0); }
 
-  img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; }
-  p { padding: 12px 14px; font-weight: 600; font-size: 0.92rem; color: $color-brand; }
+  img {
+    display: block;
+    width: 100%;
+    aspect-ratio: 497 / 334;
+    object-fit: cover;
+    border-radius: 8px;
+  }
 
-  // Figma-exported hotspot cards already bake in their own rounded white
-  // border + title, so this variant strips this element's own chrome and
-  // just lets that artwork float (with a soft lifted shadow) over the frame.
-  &.is-card {
-    width: clamp(220px, 34vw, 440px);
-    background: transparent;
-    border-radius: 0;
-    box-shadow: none;
-    filter: drop-shadow(0 16px 32px rgba(0, 0, 0, 0.35));
-
-    img { aspect-ratio: 497 / 334; object-fit: contain; }
-    p { display: none; }
-    .hotspot-popover__close { display: none; }
+  p {
+    position: absolute;
+    left: 24px;
+    right: 20px;
+    bottom: 22px;
+    z-index: 1;
+    margin: 0;
+    @include heading-serif;
+    font-size: clamp(1rem, 1.6vw, 1.3rem);
+    color: $color-white;
+    text-shadow: 0 2px 12px rgba(0, 0, 0, 0.55), 0 1px 4px rgba(0, 0, 0, 0.5);
   }
 
   &__close {
     position: absolute;
-    top: 8px;
-    right: 8px;
+    top: 18px;
+    right: 18px;
     width: 26px;
     height: 26px;
     border-radius: 50%;
     border: none;
     background: rgba(0, 0, 0, 0.45);
     color: $color-white;
-    font-size: 1rem;
-    line-height: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     cursor: pointer;
     z-index: 2;
   }

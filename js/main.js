@@ -109,12 +109,10 @@
       navText: ["&#10094;", "&#10095;"],
       margin: 24,
       smartSpeed: 500,
-      responsive: {
-        0: { items: 1 },
-        576: { items: 2 },
-        992: { items: 3 },
-        1200: { items: 4 },
-      },
+      autoWidth: true,
+      // Card width is fixed via CSS (.landmark-card), not computed from an
+      // `items` count — that's what lets the next card peek, clipped, past
+      // the right edge instead of everything shrinking to fit.
     };
 
     // Same display:none measurement issue as the gallery — lazy-init per tab.
@@ -262,49 +260,16 @@
     var $img = $("#hotspotImg");
     var $title = $("#hotspotTitle");
 
-    // Figma-exported cards: photo + rounded border + title already baked
-    // into the asset, so the popover shows the image alone (no text/bg
-    // chrome) for any hotspot title found here. Hotspots without a match
-    // fall back to the plain photo + separate title bar styling.
-    var CARD_IMAGES = {
-      "Children's Play Area": "assets/images/square-footage/children-adventure-play.webp",
-      "Pets' Gym": "assets/images/square-footage/pets-gym.webp",
-      "Zen Garden": "assets/images/square-footage/zen-garden.webp",
-      "Tree House": "assets/images/square-footage/tree-house-nature-play.webp",
-      "Creche": "assets/images/square-footage/creche.webp",
-      "Banquet Hall": "assets/images/square-footage/banquet-hall.webp",
-      "Spa": "assets/images/square-footage/spa-room.webp",
-      "Coworking": "assets/images/square-footage/sky-coworking-space.webp",
-      "Lounge": "assets/images/square-footage/residents-lounge.webp",
-      "Fitness Studio": "assets/images/square-footage/fitness-studio.webp",
-      "Salon": "assets/images/square-footage/salon.webp",
-      "Yoga Lawn": "assets/images/square-footage/yoga-lawn.webp",
-      "Banquet Rooftop": "assets/images/square-footage/rooftop-banquet-hall.webp",
-      "Pilates & Yoga": "assets/images/square-footage/pilates-yoga-studio.webp",
-      "Pickleball": "assets/images/square-footage/pickle-ball-court.webp",
-      "Mini Golf": "assets/images/square-footage/mini-golf-area.webp",
-      "Observation Deck": "assets/images/square-footage/observation-deck.webp",
-      "Open Sky Seating": "assets/images/square-footage/open-to-sky-seating.webp",
-      "Bar & Lounge": "assets/images/square-footage/bar-lounge.webp",
-    };
-
     $(".hotspot").on("click", function (e) {
       e.stopPropagation();
       var $btn = $(this);
       var title = $btn.data("title");
-      var cardSrc = CARD_IMAGES[title];
 
       $(".hotspot").removeClass("is-active");
       $btn.addClass("is-active");
 
-      $popover.toggleClass("is-card", !!cardSrc);
-      if (cardSrc) {
-        $img.attr("src", cardSrc).attr("alt", title);
-        $title.text("");
-      } else {
-        $img.attr("src", $btn.data("img")).attr("alt", title);
-        $title.text(title);
-      }
+      $img.attr("src", $btn.data("img")).attr("alt", title);
+      $title.text(title);
 
       positionPopover($btn);
       $popover.addClass("is-visible");
@@ -355,100 +320,36 @@
   // Location: category pills reveal a curated place list
   // -------------------------------------------------------------
   function initLocationCategories() {
-    var CATEGORY_DATA = {
-      hospital: {
-        title: "Hospital",
-        places: [
-          "Ankur Multispecialty Hospital",
-          "Manipal Hospital",
-          "Inlaks & Budhrani Hospital",
-          "Sahyadri Super Speciality Hospital",
-          "Jehangir Hospital",
-          "Ruby Hall Clinic",
-        ],
-      },
-      malls: {
-        title: "Malls",
-        places: ["Seasons Mall", "Amanora Mall", "The KOPA Mall", "Vascon Mariplex", "Phoenix Avenue Of Stars"],
-      },
-      business: {
-        title: "Business/Commercial Hubs",
-        places: ["Kohinoor Business Tower", "AP 81", "Godrej Centre Pune", "ABIL Boulevard", "Cerebrum IT Park"],
-      },
-      education: {
-        title: "Educational Institutions",
-        places: [
-          "Little Millennium Preschool",
-          "VIBGYOR High School",
-          "The Lexicon International School",
-          "Primrose Nursery School",
-          "ORCHIDS The International School",
-          "The Bishop's Co-Ed School",
-          "Heritage International Xperiential School",
-        ],
-      },
-      hotels: {
-        title: "Hotels",
-        places: ["Marriott Suites Pune", "The Westin Hotel", "Radisson Blu", "Conrad Hotel", "Blue Diamond"],
-      },
-      upcoming: {
-        title: "Upcoming Developments",
-        places: ["Riverfront Road", "Trump World Center", "Bajaj Campus", "Proposed Metro Station"],
-      },
-    };
+    var $cards = $(".location__card");
 
-    var $panel = $("#locationCategoryPanel");
-    var $list = $("#locationCategoryList");
-    var $title = $("#locationCategoryTitle");
-    var $pills = $(".location__pills .pill");
-
-    function closePanel() {
-      $panel.removeClass("is-open");
-      $panel.css("max-height", "0px");
-      $pills.removeClass("is-active");
+    function closeCard($card) {
+      $card.find(".location__card-content").css("max-height", "0px");
+      $card.removeClass("is-active");
+      $card.find(".location__card-tab").attr("aria-expanded", "false");
     }
 
-    function showCategory(key, $btn) {
-      var data = CATEGORY_DATA[key];
-      if (!data) return;
-      var wasOpen = $panel.hasClass("is-open");
-
-      $title.text(data.title);
-      $list.html(
-        data.places
-          .map(function (p) {
-            return "<li>" + p + "</li>";
-          })
-          .join("")
-      );
-
-      $pills.removeClass("is-active");
-      $btn.addClass("is-active");
-      $panel.addClass("is-open");
-
-      // starting from 0 (rather than the previous category's height) only
-      // when the panel was actually closed keeps a category switch from
-      // visibly collapsing shut before reopening at the new height
-      if (!wasOpen) $panel.css("max-height", "0px");
-      var target = $panel[0].scrollHeight;
+    function openCard($card) {
+      var $content = $card.find(".location__card-content");
+      $card.addClass("is-active");
+      $card.find(".location__card-tab").attr("aria-expanded", "true");
+      // scrollHeight reads the full content height even while it's clipped
+      // by max-height:0/overflow:hidden, so this gives an exact animation
+      // target regardless of how many places a category lists
+      var target = $content[0].scrollHeight;
       requestAnimationFrame(function () {
-        $panel.css("max-height", target + "px");
+        $content.css("max-height", target + "px");
       });
     }
 
-    $pills.on("click", function () {
-      var $btn = $(this);
-      var key = $btn.data("category");
-      if ($btn.hasClass("is-active")) {
-        closePanel();
-      } else {
-        showCategory(key, $btn);
-      }
-    });
+    $(".location__card-tab").on("click", function () {
+      var $card = $(this).closest(".location__card");
+      var wasActive = $card.hasClass("is-active");
 
-    $("#locationCategoryClose").on("click", function (e) {
-      e.stopPropagation();
-      closePanel();
+      $cards.filter(".is-active").each(function () {
+        closeCard($(this));
+      });
+
+      if (!wasActive) openCard($card);
     });
   }
 
