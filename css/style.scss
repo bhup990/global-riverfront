@@ -209,12 +209,15 @@ input { font-family: $font-body; }
 // SITE HEADER
 // =====================================================================
 .site-header {
-  position: sticky;
+  position: fixed;
   top: 0;
   left: 0;
   right: 0;
   z-index: 100;
-  background: $color-brand;
+  background: transparent;
+  transition: $transition;
+
+  &.is-scrolled { background: $color-brand; }
 
   &__inner {
     display: grid;
@@ -224,7 +227,7 @@ input { font-family: $font-body; }
     min-height: 76px;
     position: relative;
 
-    @include bp(lg) { min-height: 108px; }
+    @include bp(lg) { min-height: 120px; }
   }
 
   &__logo {
@@ -233,7 +236,7 @@ input { font-family: $font-body; }
     display: flex;
     align-items: center;
     justify-content: center;
-    img { height: 60px; width: auto; @include bp(lg) { height: 85px; } }
+    img { height: 72px; width: auto; @include bp(lg) { height: 100px; } }
   }
 
   &__toggle {
@@ -268,7 +271,7 @@ input { font-family: $font-body; }
   a {
     color: $color-white;
     text-decoration: none;
-    font-size: 1rem;
+    font-size: 20px;
     font-weight: 600;
     letter-spacing: 0.01em;
     padding-bottom: 4px;
@@ -315,8 +318,9 @@ input { font-family: $font-body; }
   background: $color-brand;
   color: $color-white;
   text-decoration: none;
+  text-align: right;
   padding: 22px 10px;
-  font-size: 0.85rem;
+  font-size: 20px;
   font-weight: 600;
   letter-spacing: 0.03em;
   border-radius: $radius-card 0 0 $radius-card;
@@ -362,7 +366,7 @@ input { font-family: $font-body; }
     @include absolute-cover;
     z-index: 0;
     width: 100%;
-    height: 90%;
+    height: 100%;
     object-fit: cover;
     object-position: center;
   }
@@ -389,18 +393,21 @@ input { font-family: $font-body; }
     align-items: self-end;
     gap: 22px;
     @include bp(md) { display: flex; }
+    margin-top: 6rem;
   }
 
   &__bottom {
-    margin-top: 22rem;
+    margin-top: 20rem;
   }
 
   &__subline {
     max-width: 360px;
     text-align: center;
-    font-size: 1rem;
+    font-size: 18px;
     line-height: 1.6;
     margin: 0;
+        font-weight: 600;
+    text-align: right;
   }
 
   &__scroll {
@@ -439,17 +446,21 @@ input { font-family: $font-body; }
 
   &__grid {
     display: grid;
-    gap: 32px;
-    align-items: center;
+    gap: 2rem;
+    align-items: self-end;
+    justify-content: space-between;
     grid-template-columns: 1fr;
-    @include bp(lg) { grid-template-columns: 2fr 3fr; gap: 40px; }
+    @include bp(lg) { grid-template-columns: 2fr 3fr; gap: 4rem; }
   }
 
   &__text {
     h2 { @include heading-serif; font-size: clamp(1.6rem, 2.6vw, 2.4rem); margin-bottom: 20px; }
-    p { font-size: 1rem; line-height: 1.7; color: color-mix(in srgb, $color-brand 88%, black 4%); margin-bottom: 14px; }
+    p { font-size: 1.3rem; line-height: 1.7; color: color-mix(in srgb, $color-brand 88%, black 4%); margin-bottom: 14px; }
     .btn { margin-top: 18px; }
   }
+  &__media{
+  width: 95%;
+}
 }
 
 .lifestyle-slider {
@@ -492,7 +503,7 @@ input { font-family: $font-body; }
 // =====================================================================
 .quote-banner {
   position: relative;
-  padding-block: clamp(56px, 9vw, 120px) clamp(90px, 18vw, 450px);
+  padding-block: clamp(56px, 3vw, 110px) clamp(90px, 18vw, 450px);
   overflow: hidden;
 
   &__text {
@@ -571,12 +582,16 @@ input { font-family: $font-body; }
     text-shadow: 0 2px 10px rgba(0, 0, 0, 0.45);
     z-index: 5;
     pointer-events: none;
-
-    &--light { position: relative; margin: 0 0 0 $container-pad; padding-top: 18px; }
   }
 
   &--ground .amenity-map__legend { bottom: clamp(20px, 5vw, 60px); }
-  &--ground .amenity-map__hint { display: none; @include bp(md) { display: none; } }
+
+  // nested inside the legend, the hint sits in normal flow (as a small
+  // label above the descriptive copy) instead of overlaying it
+  &__legend .amenity-map__hint {
+    position: static;
+    margin: 0 0 8px;
+  }
 
   &--rooftop {
     .amenity-map__caption { max-width: 520px; }
@@ -626,7 +641,7 @@ input { font-family: $font-body; }
 // PAVILION INTRO
 // =====================================================================
 .pavilion-intro {
-  padding: 8rem 0rem;
+  padding: 6rem 0rem;
 
   &__grid {
     display: grid;
@@ -653,7 +668,7 @@ input { font-family: $font-body; }
   }
 
   &__text p {
-    font-size: 1.02rem;
+    font-size: 1.5rem;
     line-height: 1.75;
     margin-bottom: 16px;
     color: color-mix(in srgb, $color-brand 88%, black 4%);
@@ -691,6 +706,11 @@ input { font-family: $font-body; }
     grid-template-columns: 1fr;
     align-items: start;
     @include bp(lg) { grid-template-columns: 1.3fr 0.9fr; }
+
+    // duplex/simplex units carry two dimension cards (lower/upper level,
+    // or one long list split in two) — too wide to sit beside the plan,
+    // so the plan spans full width and the cards fall in a row below it
+    &--stacked { grid-template-columns: 1fr; @include bp(lg) { grid-template-columns: 1fr; } }
   }
 
   &__plan {
@@ -734,6 +754,19 @@ input { font-family: $font-body; }
 
   &__details { display: flex; flex-direction: column; gap: 22px; }
 
+  &__cards {
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+
+    // two-card units (duplex/simplex): stack on narrow screens, sit
+    // side by side once there's room for both to breathe
+    &--row {
+      @include bp(md) { flex-direction: row; align-items: flex-start; }
+      .unit-config__card { flex: 1 1 0; }
+    }
+  }
+
   &__card {
     border: 1px solid rgba($color-brand, 0.25);
     border-radius: $radius-card;
@@ -742,13 +775,14 @@ input { font-family: $font-body; }
     &-label { text-transform: uppercase; font-size: 0.78rem; font-weight: 700; letter-spacing: 0.08em; margin-bottom: 4px; opacity: 0.75; }
     h3 { @include heading-serif; font-size: 1.4rem; margin-bottom: 16px; }
 
-    table { font-size: 0.92rem; }
+    table { font-size: 1rem; }
     th { text-align: left; padding-bottom: 8px; font-weight: 700; }
     td { padding: 8px 0; border-top: 1px solid rgba($color-brand, 0.12); }
     td:last-child, th:last-child { text-align: right; }
   }
 
   &__price { align-self: flex-start; }
+  &__price-btn{width: 20%;}
 }
 
 // =====================================================================
@@ -857,17 +891,15 @@ position:relative;
   // baseline regardless of which card (if any) is expanded above it.
   &__cards {
     display: flex;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
     justify-content: center;
     align-items: flex-end;
     gap: 1rem;
-    // In-flow (not absolutely positioned against the full-bleed section)
-    // so it stays bounded to the container width and wraps to as many
-    // rows as it needs on narrow screens instead of overflowing past the
-    // right edge or collapsing the section's height. The small negative
-    // margin keeps the original design's slight overlap onto the map.
-        position: absolute;
-    bottom: -7rem;
+    position: absolute;
+    left: 1rem;
+    right: 1rem;
+    width: 98%;
+    bottom: -3rem;
   }
 
   &__card {
@@ -1139,7 +1171,7 @@ position:relative;
 
   // matches both the Figma reference's card proportions and the native
   // ~2.06:1 crop of the landmark asset exports (was 4/3, too tall/narrow)
-  img { width: 100%; aspect-ratio: 2 / 1; object-fit: cover; border-radius: $radius-card; margin-bottom: 14px; }
+  img { width: 100%; aspect-ratio: 3/1.7; object-fit: cover; border-radius: $radius-card; margin-bottom: 14px; }
   h3 { @include heading-serif; font-size: 1.1rem; margin-bottom: 4px; }
   p { font-size: 0.88rem; color: color-mix(in srgb, $color-brand 75%, black 5%); }
 
@@ -1344,7 +1376,7 @@ position:relative;
 }
 
 // =====================================================================
-// SHARED OVERLAYS: hotspot popover + lightbox
+// SHARED OVERLAYS: hotspot popover
 // =====================================================================
 .hotspot-popover {
   position: fixed;
@@ -1405,37 +1437,177 @@ position:relative;
   }
 }
 
-.lightbox {
+// =====================================================================
+// REQUEST SITE VISIT MODAL
+// =====================================================================
+.site-visit-modal {
   position: fixed;
   inset: 0;
   z-index: 300;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 30px;
-  background: rgba(0, 0, 0, 0.85);
+  padding: 20px;
+  background: rgba(0, 0, 0, 0.6);
   opacity: 0;
   visibility: hidden;
   transition: $transition;
 
   &.is-visible { opacity: 1; visibility: visible; }
 
-  img { max-width: 100%; max-height: 90vh; border-radius: 8px; }
+  &__panel {
+    position: relative;
+    width: 100%;
+    max-width: 480px;
+    max-height: 90vh;
+    overflow-y: auto;
+    background: $color-brand;
+    color: $color-white;
+    border-radius: 24px;
+    padding: clamp(28px, 4vw, 48px);
+  }
 
   &__close {
     position: absolute;
-    top: 24px;
-    right: 24px;
-    width: 44px;
-    height: 44px;
+    top: 20px;
+    right: 20px;
+    width: 40px;
+    height: 40px;
     border-radius: 50%;
     border: none;
-    background: rgba($color-white, 0.15);
+    background: $color-white;
+    color: $color-brand;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: $transition;
+    &:hover { background: rgba($color-white, 0.85); }
+  }
+
+  &__eyebrow {
+    font-size: 1.15rem;
+    font-weight: 700;
+    margin-bottom: 6px !important;
+  }
+
+  &__subeyebrow {
+    font-size: 0.9rem;
+    opacity: 0.85;
+    margin-bottom: 22px !important;
+  }
+
+  &__title {
+    @include heading-serif;
+    color: $color-white;
+    font-size: clamp(1.6rem, 3vw, 2.1rem);
+    margin-bottom: 30px;
+  }
+
+  &__form {
+    .field {
+      margin-bottom: 28px;
+
+      label { display: block; font-weight: 700; font-size: 1rem; margin-bottom: 10px; }
+      input {
+        width: 100%;
+        border: none;
+        border-bottom: 1px solid rgba($color-white, 0.5);
+        background: transparent;
+        padding: 6px 2px 10px;
+        font-size: 0.95rem;
+        color: $color-white;
+        outline: none;
+        transition: $transition;
+        &:focus { border-color: $color-white; }
+      }
+    }
+  }
+
+  &__consent {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    font-size: 0.85rem;
+    line-height: 1.55;
+    margin-bottom: 28px;
+    cursor: pointer;
+
+    input { margin-top: 3px; accent-color: $color-white; flex-shrink: 0; }
+  }
+
+  &__submit {
+    width: 100%;
+    padding: 16px 34px;
+  }
+
+  &__note {
+    margin-top: 14px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    min-height: 1.2em;
+  }
+}
+
+// =====================================================================
+// DISCLAIMER MODAL
+// =====================================================================
+.disclaimer-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 300;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background: rgba(0, 0, 0, 0.6);
+  opacity: 0;
+  visibility: hidden;
+  transition: $transition;
+
+  &.is-visible { opacity: 1; visibility: visible; }
+
+  &__panel {
+    position: relative;
+    width: 100%;
+    max-width: 620px;
+    max-height: 85vh;
+    overflow-y: auto;
+    background: $color-white;
+    color: $color-brand;
+    border-radius: 24px;
+    padding: clamp(28px, 4vw, 48px);
+  }
+
+  &__close {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: none;
+    background: $color-brand;
     color: $color-white;
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
+    transition: $transition;
+    &:hover { background: color-mix(in srgb, $color-brand 85%, black); }
+  }
+
+  &__title {
+    @include heading-serif;
+    font-weight: 700;
+    font-size: clamp(1.4rem, 2.6vw, 1.8rem);
+    margin-bottom: 20px;
+    padding-right: 40px;
+  }
+
+  &__text {
+    font-size: 1rem;
+    line-height: 1.7;
   }
 }
 

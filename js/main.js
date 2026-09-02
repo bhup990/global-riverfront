@@ -3,16 +3,18 @@
 
   $(document).ready(function () {
     initNavToggle();
+    initHeaderScroll();
     initAOS();
     initLifestyleSlider();
     initGallery();
     initLandmarks();
     initUnitConfig();
     initHotspots();
-    initLightbox();
     initWalkthrough();
     initContactForm();
     initLocationCategories();
+    initSiteVisitModal();
+    initDisclaimerModal();
   });
 
   // -------------------------------------------------------------
@@ -31,6 +33,23 @@
       $mobile.removeClass("is-open");
       $toggle.attr("aria-expanded", false);
     });
+  }
+
+  // -------------------------------------------------------------
+  // Header: transparent over the hero video, solid once scrolled past it
+  // -------------------------------------------------------------
+  function initHeaderScroll() {
+    var $header = $("#site-header");
+    var $hero = $(".hero");
+    if (!$header.length || !$hero.length) return;
+
+    function update() {
+      var threshold = $hero.outerHeight() - $header.outerHeight();
+      $header.toggleClass("is-scrolled", $(window).scrollTop() > threshold);
+    }
+
+    update();
+    $(window).on("scroll resize", update);
   }
 
   // -------------------------------------------------------------
@@ -139,9 +158,15 @@
   // -------------------------------------------------------------
   // Unit Configuration tabs
   // -------------------------------------------------------------
+  // Each unit is either a single dimensions table (`rows`) — the plan
+  // image sits beside the card — or a `tables` array of two (a duplex's
+  // lower/upper levels, or a simplex's dimensions list split across two
+  // cards because it's too long for one) — the plan image spans full
+  // width above the cards instead. A table with no `title` renders as a
+  // bare continuation card (no "Dimensions" label/heading).
   var UNIT_DATA = {
     "2bhk-1": {
-      title: "2 BHK Type 1",
+      title: "2 BHK Type 01",
       img: "assets/images/floor-plans/2bhk-type-b.webp",
       rows: [
         ["Entrance Lobby", "5′1″ x 4′7″"],
@@ -157,99 +182,160 @@
       ],
     },
     "2bhk-2": {
-      title: "2 BHK Type 2",
-      img: "assets/images/floor-plans/2bhk-type-f.webp",
+      title: "2 BHK Type 02",
+      img: "assets/images/floor-plans/2-bhk-type-02.png",
       rows: [
-        ["Entrance Lobby", "5′0″ x 4′5″"],
-        ["Living/Dining", "17′6″ x 12′0″"],
-        ["Balcony", "15′8″ x 3′11″"],
-        ["Kitchen", "9′0″ x 7′8″"],
-        ["Utility", "3′11″ x 7′8″"],
-        ["Common Toilet", "8′6″ x 4′11″"],
-        ["Kids Bedroom", "10′0″ x 11′6″"],
-        ["Master Bedroom", "10′6″ x 13′3″"],
-        ["Master Toilet", "5′3″ x 7′10″"],
-        ["Walk In Wardrobe", "5′8″ x 7′10″"],
+        ["Entrance Lobby", "4′11″ x 5′1″"],
+        ["Living/Dining", "18′1″ x 12′0″"],
+        ["Balcony", "18′1″ x 3′11″"],
+        ["Kitchen", "8′10″ x 8′6″"],
+        ["Utility", "3′11″ x 8′6″"],
+        ["Master Bedroom 01", "10′6″ x 12′0″"],
+        ["Master Toilet 01", "4′11″ x 8′6″"],
+        ["Walk In Wardrobe 01", "5′10″ x 8′6″"],
+        ["Master Bedroom 02", "10′6″ x 12′0″"],
+        ["Master Toilet 02", "4′11″ x 8′6″"],
+        ["Walk In Wardrobe 02", "5′11″ x 8′6″"],
       ],
     },
     "3bhk": {
       title: "3 BHK",
-      img: "assets/images/floor-plans/3bhk.webp",
+      img: "assets/images/floor-plans/3-bhk.png",
       rows: [
-        ["Entrance Lobby", "5′6″ x 5′0″"],
-        ["Living/Dining", "22′0″ x 13′6″"],
-        ["Balcony", "20′0″ x 3′11″"],
-        ["Kitchen", "10′0″ x 8′6″"],
-        ["Utility", "4′0″ x 8′6″"],
-        ["Common Toilet", "9′6″ x 5′0″"],
-        ["Bedroom 2", "11′0″ x 12′6″"],
-        ["Bedroom 3", "10′6″ x 12′0″"],
-        ["Master Bedroom", "12′0″ x 14′6″"],
-        ["Master Toilet", "5′6″ x 8′6″"],
-        ["Walk In Wardrobe", "6′0″ x 8′6″"],
+        ["Entrance Lobby", "5′1″ x 9′4″"],
+        ["Living/Dining", "21′0″ x 13′9″"],
+        ["Balcony", "20′6″ x 4′11″"],
+        ["Kitchen", "12′8″ x 9′0″"],
+        ["Utility", "4′1″ x 9′0″"],
+        ["Powder Room", "4′11″ x 4′11″"],
+        ["Kids Bedroom", "10′6″ x 12′8″"],
+        ["Kids Toilet", "7′3″ x 3′11″ + 3′3″ x 2′9″"],
+        ["Master Bedroom 01", "11′0″ x 14′9″"],
+        ["Master Toilet 01", "4′9″ x 9′0″"],
+        ["Walk In Wardrobe 01", "5′11″ x 9′0″"],
+        ["Master Bedroom 02", "11′0″ x 14′9″"],
+        ["Master Toilet 02", "4′9″ x 9′0″"],
+        ["Walk In Wardrobe 02", "5′11″ x 9′0″"],
       ],
     },
     "3-5duplex": {
       title: "3.5 Duplex",
-      img: "assets/images/floor-plans/3-5bhk-duplex.webp",
-      rows: [
-        ["Entrance Lobby", "6′0″ x 5′6″"],
-        ["Living/Dining", "24′0″ x 14′0″"],
-        ["Balcony", "22′0″ x 4′0″"],
-        ["Kitchen", "10′6″ x 9′0″"],
-        ["Utility", "4′6″ x 9′0″"],
-        ["Powder Room", "5′0″ x 4′11″"],
-        ["Bedroom 2 (Upper)", "11′6″ x 13′0″"],
-        ["Study / Den (Upper)", "9′0″ x 10′0″"],
-        ["Master Bedroom (Upper)", "13′0″ x 15′0″"],
-        ["Master Toilet", "6′0″ x 9′0″"],
-        ["Walk In Wardrobe", "6′6″ x 9′0″"],
-        ["Private Terrace", "18′0″ x 8′0″"],
+      img: "assets/images/floor-plans/3.5-duplex.png",
+      tables: [
+        {
+          title: "3.5 Duplex Lower Level",
+          rows: [
+            ["Entrance Lobby", "4′11″ x 8′6″"],
+            ["Living/Dining", "18′1″ x 12′0″"],
+            ["Balcony", "18′1″ x 3′11″"],
+            ["Powder Room", "3′11″ x 5′7″"],
+            ["Kitchen", "10′6″ x 12′0″"],
+            ["Utility", "11′2″ x 3′5″"],
+            ["Staff Room", "5′11″ x 8′4″"],
+            ["Staff Toilet", "4′11″ x 5′1″"],
+            ["Master Bedroom 03", "10′6″ x 12′0″"],
+            ["Master Toilet 03", "4′11″ x 8′6″"],
+            ["Walk In Wardrobe 03", "5′10″ x 8′6″"],
+          ],
+        },
+        {
+          title: "3.5 Duplex Upper Level",
+          rows: [
+            ["Family Area", "18′1″ x 11′10″"],
+            ["Master Bedroom 02", "10′6″ x 12′0″"],
+            ["Master Toilet 02", "4′11″ x 8′6″"],
+            ["Walk In Wardrobe 02", "5′10″ x 8′6″"],
+            ["Master Bedroom 01", "10′6″ x 12′0″"],
+            ["Master Toilet 01", "4′11″ x 8′6″"],
+            ["Walk In Wardrobe 01", "5′11″ x 11′10″"],
+          ],
+        },
       ],
     },
     "3-5simplex": {
       title: "3.5 Simplex",
-      img: "assets/images/floor-plans/3-5bhk-simplex.webp",
-      rows: [
-        ["Entrance Lobby", "6′0″ x 5′0″"],
-        ["Living/Dining", "23′0″ x 13′6″"],
-        ["Balcony", "21′0″ x 4′0″"],
-        ["Kitchen", "10′0″ x 8′10″"],
-        ["Utility", "4′0″ x 8′10″"],
-        ["Powder Room", "5′0″ x 4′10″"],
-        ["Bedroom 2", "11′0″ x 12′6″"],
-        ["Study / Den", "9′0″ x 9′6″"],
-        ["Master Bedroom", "12′6″ x 14′0″"],
-        ["Master Toilet", "6′0″ x 8′10″"],
-        ["Walk In Wardrobe", "6′0″ x 8′10″"],
+      img: "assets/images/floor-plans/3.5-simple.png",
+      tables: [
+        {
+          title: "3.5 Simplex",
+          rows: [
+            ["Entrance Lobby", "7′10″ x 8′0″"],
+            ["Living/Dining", "36′3″ x 12′6″"],
+            ["Balcony 01", "16′5″ x 3′11″"],
+            ["Balcony 02", "16′5″ x 3′11″"],
+            ["Kitchen", "12′0″ x 8′0″"],
+            ["Utility", "3′11″ x 8′0″"],
+            ["Common Toilet", "9′0″ x 4′11″"],
+            ["Bedroom", "10′0″ x 12′0″"],
+            ["Master Bedroom 02", "10′6″ x 13′9″"],
+          ],
+        },
+        {
+          title: null,
+          rows: [
+            ["Master Toilet 02", "5′3″ x 8′0″"],
+            ["Walk In Wardrobe 02", "5′11″ x 8′0″"],
+            ["Store Room", "6′9″ x 3′11″"],
+            ["Staff Room", "6′3″ x 8′0″"],
+            ["Staff Toilet", "6′9″ x 3′9″"],
+            ["Master Bedroom 01", "20′10″ x 13′9″"],
+            ["Master Toilet 01", "11′6″ x 8′0″"],
+            ["Walk In Wardrobe 01", "9′0″ x 4′11″"],
+          ],
+        },
       ],
     },
   };
 
+  function unitCardHtml(table) {
+    var header = table.title
+      ? '<p class="unit-config__card-label">Dimensions</p><h3>' +
+        table.title +
+        "</h3>"
+      : "";
+    var rowsHtml = table.rows
+      .map(function (r) {
+        return "<tr><td>" + r[0] + "</td><td>" + r[1] + "</td></tr>";
+      })
+      .join("");
+    return (
+      '<div class="unit-config__card">' +
+      header +
+      "<table><thead><tr><th>Heading</th><th>Carpet Area</th></tr></thead><tbody>" +
+      rowsHtml +
+      "</tbody></table></div>"
+    );
+  }
+
   function initUnitConfig() {
     var $tabs = $(".unit-config__tab");
+    var $panel = $("#unitPanel");
     var $img = $("#unitPlanImg");
-    var $title = $("#unitPlanTitle");
-    var $tbody = $("#unitPlanTable tbody");
+    var $cards = $("#unitCards");
+
+    function render(key) {
+      var data = UNIT_DATA[key];
+      if (!data) return;
+
+      $img.attr("src", data.img).attr("alt", data.title + " floor plan");
+
+      var tables = data.tables || [{ title: data.title, rows: data.rows }];
+      $cards.html(tables.map(unitCardHtml).join(""));
+      $cards.toggleClass("unit-config__cards--row", tables.length > 1);
+      $panel.toggleClass("unit-config__panel--stacked", tables.length > 1);
+    }
 
     $tabs.on("click", function () {
       var key = $(this).data("unit");
-      var data = UNIT_DATA[key];
-      if (!data) return;
+      if (!UNIT_DATA[key]) return;
 
       $tabs.removeClass("is-active").attr("aria-selected", "false");
       $(this).addClass("is-active").attr("aria-selected", "true");
 
-      $img.attr("src", data.img).attr("alt", data.title + " floor plan");
-      $title.text(data.title);
-
-      var rowsHtml = data.rows
-        .map(function (r) {
-          return "<tr><td>" + r[0] + "</td><td>" + r[1] + "</td></tr>";
-        })
-        .join("");
-      $tbody.html(rowsHtml);
+      render(key);
     });
+
+    render($tabs.filter(".is-active").data("unit"));
   }
 
   // -------------------------------------------------------------
@@ -354,29 +440,6 @@
   }
 
   // -------------------------------------------------------------
-  // Floor plan zoom lightbox
-  // -------------------------------------------------------------
-  function initLightbox() {
-    var $lightbox = $("#planLightbox");
-    var $lbImg = $("#lightboxImg");
-
-    $("#unitZoom").on("click", function () {
-      $lbImg.attr("src", $("#unitPlanImg").attr("src"));
-      $lightbox.addClass("is-visible");
-    });
-
-    $("#lightboxClose, #planLightbox").on("click", function (e) {
-      if (e.target === this || $(e.target).is("#lightboxClose")) {
-        $lightbox.removeClass("is-visible");
-      }
-    });
-
-    $(document).on("keyup", function (e) {
-      if (e.key === "Escape") $lightbox.removeClass("is-visible");
-    });
-  }
-
-  // -------------------------------------------------------------
   // Walkthrough video
   // -------------------------------------------------------------
   function initWalkthrough() {
@@ -406,6 +469,66 @@
       }
       $note.text("Thank you! Our team will get back to you shortly.");
       $form[0].reset();
+    });
+  }
+
+  // -------------------------------------------------------------
+  // "Request Site Visit" popup form
+  // -------------------------------------------------------------
+  function initSiteVisitModal() {
+    var $modal = $("#siteVisitModal");
+    var $form = $("#siteVisitForm");
+    var $note = $("#siteVisitNote");
+
+    $(document).on("click", ".js-open-details-modal", function (e) {
+      e.preventDefault();
+      $modal.addClass("is-visible");
+    });
+
+    $("#siteVisitClose").on("click", function () {
+      $modal.removeClass("is-visible");
+    });
+
+    $modal.on("click", function (e) {
+      if (e.target === this) $modal.removeClass("is-visible");
+    });
+
+    $(document).on("keyup", function (e) {
+      if (e.key === "Escape") $modal.removeClass("is-visible");
+    });
+
+    $form.on("submit", function (e) {
+      e.preventDefault();
+      if (!this.checkValidity()) {
+        this.reportValidity();
+        return;
+      }
+      $note.text("Thank you! Our team will get back to you shortly.");
+      $form[0].reset();
+    });
+  }
+
+  // -------------------------------------------------------------
+  // Footer "Disclaimer" popup
+  // -------------------------------------------------------------
+  function initDisclaimerModal() {
+    var $modal = $("#disclaimerModal");
+
+    $(document).on("click", ".js-open-disclaimer-modal", function (e) {
+      e.preventDefault();
+      $modal.addClass("is-visible");
+    });
+
+    $("#disclaimerClose").on("click", function () {
+      $modal.removeClass("is-visible");
+    });
+
+    $modal.on("click", function (e) {
+      if (e.target === this) $modal.removeClass("is-visible");
+    });
+
+    $(document).on("keyup", function (e) {
+      if (e.key === "Escape") $modal.removeClass("is-visible");
     });
   }
 })(jQuery);
