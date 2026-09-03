@@ -4,6 +4,7 @@
   $(document).ready(function () {
     initNavToggle();
     initHeaderScroll();
+    initHeroSound();
     initAOS();
     initLifestyleSlider();
     initGallery();
@@ -40,16 +41,48 @@
   // -------------------------------------------------------------
   function initHeaderScroll() {
     var $header = $("#site-header");
-    var $hero = $(".hero");
-    if (!$header.length || !$hero.length) return;
+    if (!$header.length) return;
 
     function update() {
-      var threshold = $hero.outerHeight() - $header.outerHeight();
+      var threshold = window.innerHeight * 0.1;
       $header.toggleClass("is-scrolled", $(window).scrollTop() > threshold);
     }
 
     update();
     $(window).on("scroll resize", update);
+  }
+
+  // -------------------------------------------------------------
+  // Hero video sound toggle
+  // -------------------------------------------------------------
+  function initHeroSound() {
+    var video = document.getElementById("heroVideo");
+    var $btn = $("#heroSoundToggle");
+    if (!video || !$btn.length) return;
+
+    function sync() {
+      $btn
+        .toggleClass("is-muted", video.muted)
+        .attr("aria-label", video.muted ? "Unmute video" : "Mute video");
+    }
+
+    // browsers block unmuted autoplay without a prior user gesture — try
+    // playing with sound first, and only fall back to muted if that's rejected
+    var playPromise = video.play();
+    if (playPromise && playPromise.catch) {
+      playPromise.catch(function () {
+        video.muted = true;
+        video.play();
+        sync();
+      });
+    }
+    sync();
+
+    $btn.on("click", function () {
+      video.muted = !video.muted;
+      if (!video.muted) video.play();
+      sync();
+    });
   }
 
   // -------------------------------------------------------------
