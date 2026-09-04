@@ -283,7 +283,7 @@ input { font-family: $font-body; }
   @include bp(lg) { display: block; }
 
   &--left { grid-column: 1; justify-self: start; }
-  &--right { grid-column: 3; justify-self: end;margin-right: 6rem; }
+  &--right { grid-column: 3; justify-self: end;}
 }
 
 .site-nav__mobile {
@@ -710,9 +710,13 @@ input { font-family: $font-body; }
     }
   }
 
+  &__text{
+    max-width: 745px;
+  }
+
   &__text p {
-    font-size: 1.5rem;
-    line-height: 1.75;
+    font-size: 1.6rem;
+    line-height: 1.5;
     margin-bottom: 16px;
     color: color-mix(in srgb, $color-brand 88%, black 4%);
   }
@@ -1062,7 +1066,7 @@ position:relative;
     gap: 20px;
     margin-bottom: 28px;
 
-    h2 { @include heading-serif; font-size: clamp(1.5rem, 2.6vw, 2.1rem); max-width: 620px; }
+    h2 { @include heading-serif; font-size: clamp(1.5rem, 2.6vw, 2.1rem); }
   }
 
   &__toggle svg { margin-left: 2px; }
@@ -1671,6 +1675,11 @@ position:relative;
 .unit-config__plan,
 .unit-config__details {
   min-width: 0;
+}
+.contact{
+  &__btn-wrap{
+    text-align: center;
+  }
 }
 
 // =====================================================================

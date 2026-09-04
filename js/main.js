@@ -382,6 +382,8 @@
     $(".hotspot").on("click", function (e) {
       e.stopPropagation();
       var $btn = $(this);
+      // A–F letter markers are labels only, not interactive triggers
+      if ($btn.hasClass("hotspot--letter")) return;
       var title = $btn.data("title");
 
       $(".hotspot").removeClass("is-active");
